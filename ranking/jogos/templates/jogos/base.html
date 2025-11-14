@@ -4,19 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking de Jogos</title>
-    <!-- estilos CSS aqui -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        header {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        nav a, .nav-user span {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+        
+        .user-info {
+            color: #666;
+            font-weight: normal;
+        }
+        
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .messages {
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .card strong {
+            font-size: 1.2em;
+            color: #333;
+        }
+        
+        .card p {
+            margin: 10px 0;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        form p {
+            margin: 15px 0;
+        }
+        
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>🎮 Ranking de Jogos Favoritos</h1>
         <nav>
-            <a href="{% url 'lista_jogos' %}">🏆 Ranking</a> |
-            <a href="{% url 'criar_jogo' %}">➕ Adicionar Jogo</a>
+            <div class="nav-links">
+                <a href="{% url 'lista_jogos' %}">🏆 Ranking</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'criar_jogo' %}">➕ Adicionar Jogo</a>
+                {% endif %}
+            </div>
+            
+            <div class="nav-user">
+                {% if user.is_authenticated %}
+                    <span class="user-info">👤 {{ user.username }}</span>
+                    <a href="{% url 'perfil' %}">Meu Perfil</a>
+                    <a href="{% url 'logout' %}">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}">🔐 Login</a>
+                    <a href="{% url 'registro' %}">📝 Cadastre-se</a>
+                {% endif %}
+            </div>
         </nav>
         <hr>
     </header>
+    
+    <!-- Mensagens do sistema -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
     <main>
-        {% block content %}{% endblock %}  ← Apenas uma vez!
+        {% block content %}{% endblock %}
     </main>
 </body>
 </html>

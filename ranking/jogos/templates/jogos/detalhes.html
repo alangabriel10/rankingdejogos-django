@@ -1,156 +1,199 @@
-{% extends 'jogos/base.html' %}
-
-{% block content %}
+{% extends 'jogos/base.html' %} {% block content %}
 <div class="detalhes-container">
-    <div class="detalhes-header">
-        <h2>🎮 {{ jogo.titulo }}</h2>
-        <span class="badge-posicao">#{{ posicao }} no Ranking</span>
+  <div class="detalhes-header">
+    <h2>🎮 {{ jogo.titulo }}</h2>
+    <span class="badge-posicao">#{{ posicao }} no Ranking</span>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>📊 Estatísticas</h3>
+      <p><strong>Votos:</strong> {{ jogo.votos }}</p>
+      <p>
+        <strong>Percentual:</strong> {{ jogo.percentual_votos }}% dos votos
+        totais
+      </p>
+      <p><strong>Posição:</strong> {{ posicao }}º de {{ total_jogos }} jogos</p>
     </div>
 
-    <div class="info-grid">
-        <div class="info-card">
-            <h3>📊 Estatísticas</h3>
-            <p><strong>Votos:</strong> {{ jogo.votos }}</p>
-            <p><strong>Percentual:</strong> {{ jogo.percentual_votos }}% dos votos totais</p>
-            <p><strong>Posição:</strong> {{ posicao }}º de {{ total_jogos }} jogos</p>
-        </div>
-
-        <div class="info-card">
-            <h3>ℹ️ Informações</h3>
-            <p><strong>Gênero:</strong> {{ jogo.genero }}</p>
-            {% if jogo.plataforma %}
-            <p><strong>Plataforma:</strong> {{ jogo.plataforma }}</p>
-            {% endif %}
-            <p><strong>Cadastrado em:</strong> {{ jogo.data_cadastro|date:"d/m/Y" }}</p>
-        </div>
+    <div class="info-card">
+      <h3>ℹ️ Informações</h3>
+      <p><strong>Gênero:</strong> {{ jogo.genero }}</p>
+      {% if jogo.plataforma %}
+      <p><strong>Plataforma:</strong> {{ jogo.plataforma }}</p>
+      {% endif %}
+      <p>
+        <strong>Cadastrado em:</strong> {{ jogo.data_cadastro|date:"d/m/Y" }}
+      </p>
     </div>
+  </div>
 
-    {% if jogo.descricao %}
-    <div class="descricao-card">
-        <h3>📝 Descrição</h3>
-        <p>{{ jogo.descricao }}</p>
-    </div>
+  {% if jogo.descricao %}
+  <div class="descricao-card">
+    <h3>📝 Descrição</h3>
+    <p>{{ jogo.descricao }}</p>
+  </div>
+  {% endif %}
+
+  <div class="acoes">
+    {% if user.is_authenticated %} {% if ja_votou %}
+    <button disabled class="btn-ja-votou">✅ Você já votou neste jogo</button>
+    {% else %}
+    <form
+      action="{% url 'votar_jogo' jogo.id %}"
+      method="post"
+      style="display: inline"
+    >
+      {% csrf_token %}
+      <button type="submit" class="btn-votar">👍 Votar neste Jogo</button>
+    </form>
+    {% endif %} {% else %}
+    <a href="{% url 'login' %}" class="btn-login">🔐 Faça login para votar</a>
     {% endif %}
+    <a href="{% url 'lista_jogos' %}" class="btn-voltar">⬅ Voltar ao Ranking</a>
+  </div>
 
-    <div class="acoes">
-        <form action="{% url 'votar_jogo' jogo.id %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn-votar">👍 Votar neste Jogo</button>
-        </form>
-        <a href="{% url 'lista_jogos' %}" class="btn-voltar">⬅ Voltar ao Ranking</a>
-    </div>
+  <!-- Adicione este CSS extra -->
+  <style>
+    .btn-ja-votou {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-login {
+      background: #2196f3;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: bold;
+    }
+  </style>
+
+  <div class="acoes">
+    <form
+      action="{% url 'votar_jogo' jogo.id %}"
+      method="post"
+      style="display: inline"
+    >
+      {% csrf_token %}
+      <button type="submit" class="btn-votar">👍 Votar neste Jogo</button>
+    </form>
+    <a href="{% url 'lista_jogos' %}" class="btn-voltar">⬅ Voltar ao Ranking</a>
+  </div>
 </div>
 
 <style>
-    .detalhes-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
+  .detalhes-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
-    .detalhes-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-    }
+  .detalhes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
 
-    .detalhes-header h2 {
-        margin: 0;
-        color: #333;
-    }
+  .detalhes-header h2 {
+    margin: 0;
+    color: #333;
+  }
 
-    .badge-posicao {
-        background: #4CAF50;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: bold;
-        font-size: 0.9em;
-    }
+  .badge-posicao {
+    background: #4caf50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
 
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        margin-bottom: 20px;
-    }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
 
-    .info-card {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+  .info-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
 
-    .info-card h3 {
-        margin-top: 0;
-        color: #4CAF50;
-        border-bottom: 2px solid #4CAF50;
-        padding-bottom: 10px;
-    }
+  .info-card h3 {
+    margin-top: 0;
+    color: #4caf50;
+    border-bottom: 2px solid #4caf50;
+    padding-bottom: 10px;
+  }
 
-    .info-card p {
-        margin: 10px 0;
-        line-height: 1.6;
-    }
+  .info-card p {
+    margin: 10px 0;
+    line-height: 1.6;
+  }
 
-    .descricao-card {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
+  .descricao-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
 
-    .descricao-card h3 {
-        margin-top: 0;
-        color: #4CAF50;
-        border-bottom: 2px solid #4CAF50;
-        padding-bottom: 10px;
-    }
+  .descricao-card h3 {
+    margin-top: 0;
+    color: #4caf50;
+    border-bottom: 2px solid #4caf50;
+    padding-bottom: 10px;
+  }
 
-    .descricao-card p {
-        line-height: 1.8;
-        color: #555;
-    }
+  .descricao-card p {
+    line-height: 1.8;
+    color: #555;
+  }
 
-    .acoes {
-        display: flex;
-        gap: 15px;
-        margin-top: 30px;
-        flex-wrap: wrap;
-    }
+  .acoes {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
 
-    .btn-votar {
-        background: #4CAF50;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1em;
-        font-weight: bold;
-    }
+  .btn-votar {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+  }
 
-    .btn-votar:hover {
-        background: #45a049;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+  .btn-votar:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 
-    .btn-voltar {
-        background: #666;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 5px;
-        text-decoration: none;
-        display: inline-block;
-        font-weight: bold;
-    }
+  .btn-voltar {
+    background: #666;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+  }
 
-    .btn-voltar:hover {
-        background: #555;
-    }
+  .btn-voltar:hover {
+    background: #555;
+  }
 </style>
 {% endblock %}

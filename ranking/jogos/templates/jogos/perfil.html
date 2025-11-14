@@ -1,0 +1,98 @@
+{% extends 'jogos/base.html' %}
+
+{% block content %}
+<div class="perfil-container">
+    <h2>👤 Meu Perfil</h2>
+    
+    <div class="perfil-info">
+        <p><strong>Usuário:</strong> {{ user.username }}</p>
+        <p><strong>Total de votos:</strong> {{ votos|length }}</p>
+    </div>
+
+    <h3>🎮 Jogos que você votou:</h3>
+    
+    {% if votos %}
+    <div class="votos-lista">
+        {% for voto in votos %}
+        <div class="voto-card">
+            <div class="voto-info">
+                <a href="{% url 'detalhes_jogo' voto.jogo.id %}">
+                    <strong>{{ voto.jogo.titulo }}</strong>
+                </a>
+                <p>🎮 {{ voto.jogo.genero }} | 👍 {{ voto.jogo.votos }} votos</p>
+                <p class="data-voto">Votado em: {{ voto.data_voto|date:"d/m/Y às H:i" }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-message">Você ainda não votou em nenhum jogo. 😢</p>
+    {% endif %}
+</div>
+
+<style>
+    .perfil-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .perfil-info {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .perfil-info p {
+        margin: 10px 0;
+        font-size: 1.1em;
+    }
+
+    .votos-lista {
+        display: grid;
+        gap: 15px;
+    }
+
+    .voto-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    .voto-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .voto-info a {
+        text-decoration: none;
+        color: #4CAF50;
+        font-size: 1.2em;
+    }
+
+    .voto-info a:hover {
+        text-decoration: underline;
+    }
+
+    .voto-info p {
+        margin: 8px 0;
+        color: #666;
+    }
+
+    .data-voto {
+        font-size: 0.9em;
+        color: #999;
+        font-style: italic;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+        font-size: 1.1em;
+    }
+</style>
+{% endblock %}

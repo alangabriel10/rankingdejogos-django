@@ -1,0 +1,117 @@
+{% extends 'jogos/base.html' %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>🔐 Login</h2>
+    
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="error-box">
+            <strong>⚠️ Usuário ou senha incorretos!</strong>
+        </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Nome de usuário:</label>
+            {{ form.username }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Senha:</label>
+            {{ form.password }}
+        </div>
+        
+        <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+    
+    <p class="auth-link">
+        Não tem uma conta? <a href="{% url 'registro' %}">Cadastre-se</a>
+    </p>
+</div>
+
+<style>
+    .auth-container {
+        max-width: 450px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .auth-container h2 {
+        text-align: center;
+        color: #4CAF50;
+        margin-bottom: 30px;
+    }
+
+    .auth-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .auth-form label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .auth-form input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 1em;
+    }
+
+    .auth-form input:focus {
+        outline: none;
+        border-color: #4CAF50;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 5px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+        background: #45a049;
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+    }
+
+    .auth-link a {
+        color: #4CAF50;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-link a:hover {
+        text-decoration: underline;
+    }
+
+    .error-box {
+        background: #ffebee;
+        border: 1px solid #ef5350;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        color: #c62828;
+    }
+</style>
+{% endblock %}

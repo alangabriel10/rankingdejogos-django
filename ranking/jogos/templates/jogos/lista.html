@@ -5,23 +5,29 @@
 
 {% for jogo in jogos %}
 <div class="card">
-    <!-- Título agora é um link clicável -->
     <a href="{% url 'detalhes_jogo' jogo.id %}" class="titulo-link">
         <strong>{{ forloop.counter }}. {{ jogo.titulo }}</strong>
     </a>
     <p>🎮 Gênero: {{ jogo.genero }}</p>
     <p>👍 Votos: {{ jogo.votos }}</p>
     
-    <!-- Mostrar descrição resumida se existir -->
     {% if jogo.descricao %}
     <p class="descricao-resumo">{{ jogo.descricao|truncatewords:15 }}</p>
     {% endif %}
     
     <div class="card-acoes">
-        <form action="{% url 'votar_jogo' jogo.id %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit">Votar</button>
-        </form>
+        {% if user.is_authenticated %}
+            {% if jogo.id in votos_usuario %}
+                <button disabled>✅ Você já votou</button>
+            {% else %}
+                <form action="{% url 'votar_jogo' jogo.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Votar</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-login">🔐 Faça login para votar</a>
+        {% endif %}
         <a href="{% url 'detalhes_jogo' jogo.id %}" class="btn-detalhes">Ver Detalhes</a>
     </div>
 </div>
@@ -51,9 +57,10 @@
         gap: 10px;
         align-items: center;
         margin-top: 15px;
+        flex-wrap: wrap;
     }
 
-    .btn-detalhes {
+    .btn-detalhes, .btn-login {
         background: #2196F3;
         color: white;
         padding: 8px 16px;
@@ -62,7 +69,7 @@
         font-size: 0.9em;
     }
 
-    .btn-detalhes:hover {
+    .btn-detalhes:hover, .btn-login:hover {
         background: #1976D2;
     }
 </style>
