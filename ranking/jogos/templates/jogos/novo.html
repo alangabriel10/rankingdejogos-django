@@ -1,0 +1,67 @@
+{% extends 'jogos/base.html' %}
+
+{% block content %}
+<h2>➕ Adicionar Novo Jogo</h2>
+
+<form method="post" class="form-jogo">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="id_titulo">Título do Jogo:</label>
+        {{ form.titulo }}
+    </div>
+    
+    <div class="form-group">
+        <label for="id_genero">Gênero:</label>
+        {{ form.genero }}
+    </div>
+    
+    <div class="form-group">
+        <label for="id_plataforma">Plataforma:</label>
+        {{ form.plataforma }}
+    </div>
+    
+    <div class="form-group">
+        <label for="id_descricao">Descrição:</label>
+        {{ form.descricao }}
+    </div>
+    
+    <button type="submit">Salvar</button>
+</form>
+
+<br>
+<a href="{% url 'lista_jogos' %}">⬅ Voltar</a>
+
+<style>
+    .form-jogo {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+</style>
+{% endblock %}

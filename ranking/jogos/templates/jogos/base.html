@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking de Jogos</title>
+    <!-- estilos CSS aqui -->
+</head>
+<body>
+    <header>
+        <h1>🎮 Ranking de Jogos Favoritos</h1>
+        <nav>
+            <a href="{% url 'lista_jogos' %}">🏆 Ranking</a> |
+            <a href="{% url 'criar_jogo' %}">➕ Adicionar Jogo</a>
+        </nav>
+        <hr>
+    </header>
+    <main>
+        {% block content %}{% endblock %}  ← Apenas uma vez!
+    </main>
+</body>
+</html>
