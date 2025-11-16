@@ -88,8 +88,14 @@ class RegistroView(CreateView):
     
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Conta criada com sucesso! Faça login para continuar.')
+        messages.success(self.request, 'Conta criada com sucesso! 🎉 Faça login para continuar.')
         return response
+    
+    def get(self, request, *args, **kwargs):
+        # Se usuário já estiver logado, redireciona para home
+        if request.user.is_authenticated:
+            return redirect('lista_jogos')
+        return super().get(request, *args, **kwargs)
 
 
 class MeuLoginView(LoginView):
@@ -98,6 +104,12 @@ class MeuLoginView(LoginView):
     def get_success_url(self):
         messages.success(self.request, f'Bem-vindo(a), {self.request.user.username}! 🎮')
         return reverse_lazy('lista_jogos')
+    
+    def get(self, request, *args, **kwargs):
+        # Se usuário já estiver logado, redireciona para home
+        if request.user.is_authenticated:
+            return redirect('lista_jogos')
+        return super().get(request, *args, **kwargs)
 
 
 class MeuLogoutView(LogoutView):
